@@ -19,12 +19,13 @@ class SubscriptionService extends BaseService
         return $data;
     }
 
-    public function setSubscription(array $data)
+    public function setSubscription(int $subId)
     {
         $user = Auth::guard('web-user')->user();
         if(!$user) {
-            return $this->errNotAcceptable('Нужна авторизация');
+            return $this->errFobidden('Требуется авторизация');
         }
-
+        $user->update(['subscription_id' => $subId, 'sub_end' => substr(date('Y-m-d h:i:sa', strtotime('+1 month')), 0, -2)]);
+        return true;
     }
 }

@@ -16,6 +16,6 @@ class AuthorRepository
             );
             array_push($authorsId, $author->id);
         }
-        return $authorsId();
+        return $authorsId;
     }
 }

@@ -3,8 +3,9 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Auth;
 
-class EditBookRequest extends FormRequest
+class BookExtrasRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -13,7 +14,7 @@ class EditBookRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return Auth::check();
     }
 
     /**
@@ -24,15 +25,8 @@ class EditBookRequest extends FormRequest
     public function rules()
     {
         return [
-            'id' => 'required',
-            'title' => 'required',
-            'cover' => 'required|file',
-            'author' => 'required',
-            'year' => 'required',
-            'genres' => 'required',
-            'description' => 'required',
-            'sub' => 'required',
-            'text-file' => 'required',
+            'files' => ['array'],
+            'files.*' => ['file']
         ];
     }
 }

@@ -18,8 +18,9 @@ class SubscriptionController extends Controller
         return view('pages.subscriptions', $this->service->index());
     }
 
-    public function setSubscription()
+    public function setSubscription(Request $request)
     {
-
+        $id = $request->validate(['sub_id' => 'required|exists:subscriptions,id']);
+        return $this->service->setSubscription($id['sub_id']);
     }
 }

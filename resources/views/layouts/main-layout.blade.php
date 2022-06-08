@@ -52,12 +52,12 @@
                                 <li><a class ="{{ str_contains(request()->url(), '/all') ? 'color' : '' }}" href="">Новинки</a></li>
                                 <li><a class ="{{ str_contains(request()->url(), '/catalog') ? 'color' : '' }}" href="" href="catalog.html">Каталог</a></li>
                                 @if (Auth::guard('web-user')->user()?->admin)
-                                    <li> <a class ="{{ str_contains(request()->url(), '/editForm') ? 'color' : '' }}" href="">Добавить книгу</a></li>
+                                    <li> <a class ="{{ str_contains(request()->url(), '/redact') ? 'color' : '' }}" href="{{ route('redact') }}">Добавить книгу</a></li>
                                     <li> <a class ="nav-link" href="{{ route('add') }}">Тест</a></li>
                                 @endif
                             </ul>
                         </li>
-                        @if(false)
+                        @if(Auth::guard('web-user')->user())
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                     Моё
@@ -83,10 +83,9 @@
                 </div>
                 <nav class = "col-lg-9 header_nav  d-flex">
                     <a class ="nav-link color" href="/">Книги</a>
-                    {{-- TODO --}}
-                    {{-- @if(false)
+                    @if(Auth::guard('web-user')->user())
                         <a class ="nav-link" href="#">Моё</a>
-                    @endif --}}
+                    @endif
                 </nav>
                 <div class ="col-lg-2 d-flex header_end">
 
@@ -165,7 +164,7 @@
                     <a class ="nav-link" href="">Подборки</a>
                     <a class ="{{ str_contains(request()->url(), '/subscriptions') ? 'nav-link color' : 'nav-link' }}" href="{{route('subs')}}">Подписки</a>
                     @if (Auth::guard('web-user')->user()?->admin)
-                        <a class ="{{ str_contains(request()->url(), '/editForm') ? 'nav-link color' : 'nav-link' }}" href="">Добавить книгу</a>
+                        <a class ="{{ str_contains(request()->url(), '/redact') ? 'nav-link color' : 'nav-link' }}" href="{{ route('redact') }}">Добавить книгу</a>
                         <a class ="nav-link" href="{{ route('add') }}">Тест</a>
                     @endif
                 </nav>

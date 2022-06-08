@@ -15,6 +15,6 @@ class GenreRepository
             );
             array_push($genresId, $genreNew->id);
         }
-        return $genresId();
+        return $genresId;
     }
 }

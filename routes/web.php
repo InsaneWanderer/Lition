@@ -35,10 +35,12 @@ Route::group(['prefix' => '/collections'], function () {
 Route::group(['prefix' => '/book'], function () {
     Route::post('/create', [BookController::class, 'create'])->name('add');
     Route::post('/update', [BookController::class, 'update'])->name('update');
-    Route::get('/{slug?}', [BookController::class, 'redact'])->name('redact');
+    Route::get('/{slug}/files', [BookController::class, 'filesControl'])->name('files');
+    Route::post('/{slug}/files/edit', [BookController::class, 'editFiles'])->name('editFiles');
+    Route::get('/redact/{slug?}', [BookController::class, 'redact'])->name('redact');
     Route::get('/{slug}', [BookController::class, 'index'])->name('book');
-    Route::get('/{slug}/read/{fragment?}', [BookController::class, 'read'])->name('read');
-    Route::delete('/{slug}/delete', [BookController::class, 'delete'])->name('delete');
+    Route::post('/{id}/delete', [BookController::class, 'delete'])->name('delete');
+    Route::get('/{slug}/read/{page}/{type}/{fragment?}', [BookController::class, 'read'])->name('read');
 });
 
 Route::group(['prefix' => '/subscriptions'], function () {

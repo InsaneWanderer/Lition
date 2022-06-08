@@ -6,7 +6,7 @@
         </div>
     </div>
     <div class="row row-cols-1 row-cols-md-3 row-cols-lg-3 g-4 subscribe__items">
-        @foreach($subscriptions as $sub)
+        @foreach ($subscriptions as $sub)
             <div class="col ">
                 <a class="card subscribe_item d-flex align-items-center h-100 " href="#">
                     <img style="display: block; margin-left:auto;margin-right:auto" src="/img/14043255.jpg" class="card-img-top" alt="">
@@ -14,8 +14,9 @@
                         <h2 class="subscribe_header_text">{{$sub->name}}</h2>
                         <p class="subscribe_header_under">{{$sub->description}}</p>
                         <p class="subscribe_price">{{$sub->price}} ₽ в месяц</p>
-                        <form class ="subscribe_btn">
-                            <button type="button" class="subscribe_about">ОФОРМИТЬ ПОДПИСКУ</button>
+                        <form action="{{ route('setSub') }}" class ="subscribe_btn">
+                            <input name='sub_id' hidden type="text" value="{{ $sub->id }}">
+                            <button type="submit" class="subscribe_about">ОФОРМИТЬ ПОДПИСКУ</button>
                         </form>
                     </div>
                 </a>

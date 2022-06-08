@@ -2,6 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CreateBookRequest;
+use App\Http\Requests\UpdateBookRequest;
+use App\Rules\AuthorRule;
+use App\Rules\GenreRule;
 use App\Services\BookService;
 use Illuminate\Http\Request;
 
@@ -23,33 +27,55 @@ class BookController extends Controller
         return view('pages.admin.redact-book', $this->service->prepareRedact($slug));
     }
 
-    public function create()
+    public function create(CreateBookRequest $request)
     {
-        return $this->service->create([]);
+        $data = $request->validated();
+        $result = $this->service->create($data);
+        if ($result) {
+            return redirect(route('index'));
+        }
+        else {
+            return abort(404, "Что-то пошло не так...");
+        }
     }
 
-    public function update()
+    public function update(UpdateBookRequest $request)
     {
-        return $this->service->update([]);
+        $data = $request->validated();
+        $result = $this->service->update($data);
+        if ($result) {
+            return redirect(route('index'));
+        }
+        else {
+            return abort(404, "Что-то пошло не так...");
+        }
     }
 
-    public function read(string $slug, int $page, bool $fragment = false)
+    public function read(string $slug, int $page, string $type, bool $fragment = false)
     {
-        return $this->service->read($slug, $page, $fragment);
+        return view('pages.reader', $this->service->read($slug, $page, $type, $fragment));
     }
 
-    public function delete(string $slug)
+    public function delete(int $id)
     {
-        return $this->service->delete($slug);
+        $this->service->delete($id);
+        return redirect('/');
     }
 
-    public function addFile()
+    public function editFiles(string $slug, Request $request)
     {
-        return $this->service->addFile([]);
+        $data = $request->validate([
+            'files' => 'array',
+            'files.*' => 'file|required',
+            'types' => 'array',
+            'types.*' => 'string|required'
+        ]);
+
+        return $this->service->editFiles($slug, $data);
     }
 
-    public function removeFile(int $fileId)
+    public function filesControl(string $slug)
     {
-        return $this->service->removeFile($fileId);
+        return view('pages.admin.book-files-control', $this->service->prepareControl($slug));
     }
 }

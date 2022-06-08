@@ -10,6 +10,16 @@ class Book extends Model
 {
     use HasFactory, SoftDeletes;
 
+    protected $fillable =[
+        'subscription_id',
+        'slug',
+        'name',
+        'pages_count',
+        'year',
+        'description',
+        'cover_path'
+    ];
+
     public function genres()
     {
         return $this->belongsToMany(Genre::class, 'book_genres');
@@ -32,6 +42,6 @@ class Book extends Model
 
     public function files()
     {
-        return $this->belongsTo(File::class);
+        return $this->hasMany(File::class);
     }
 }

@@ -12,6 +12,11 @@ class BookRepository
         return $query->get();
     }
 
+    public function bookById(int $id)
+    {
+        return Book::find($id);
+    }
+
     public function bookBySlug(string $slug)
     {
         return Book::where('slug', $slug)->first();

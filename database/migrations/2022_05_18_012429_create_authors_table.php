@@ -21,6 +21,7 @@ return new class extends Migration
             $table->date('death')->nullable();
             $table->text('description')->nullable();
             $table->string('photo_path')->nullable();
+            $table->timestamps();
         });
     }
 

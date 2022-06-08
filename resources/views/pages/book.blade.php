@@ -40,8 +40,7 @@
                     </div>
                     </div>
                     <div class ="books_btn d-flex">
-                        {{-- {{ route('reader', [$book->slug, true]) }} --}}
-                    <form class ="read_btn " action="">
+                    <form class ="read_btn " action="{{ route('read', [$book->slug, 1, 'русский', true]) }}">
                         <button type="submit" class="book_about"> <i class="fas fa-book-open icon_book"></i>Читать фрагмент</button>
                     </form>
 
@@ -49,25 +48,31 @@
                         <button type="button" class="book_about"><i class="far fa-heart icon_book"></i>Отложить книгу</button>
                     </form>
                 </div>
-                {{-- {{ route('reader', [$book->slug]) }} --}}
-                <form class ="read_btn " action="">
+                <form class ="read_btn " action="{{ route('read', [$book->slug, 1, 'русский']) }}">
                     <button type="submit" class="book_about_second"> <i class=""></i>Читать</button>
                 </form>
                 <form class ="read_btn ">
                     <button type="button" class="book_about_third"> <i class=""></i>Отметить прочитанной</button>
                 </form>
-                {{-- TODO: admin --}}
 
-                <div class ="books_btn d-flex">
-                    {{-- {{route('editForm', [$book->slug])}} --}}
-                    <form class ="read_btn " action="">
-                        <button type="submit" class="book_about_third"> <i class=""></i>Изменить</button>
-                    </form>
-                    {{-- {{route('delete', [$book->id])}} --}}
-                    <form class ="read_btn " action="">
-                        <button type="submit" class="book_about_third"> <i class=""></i>Удалить</button>
-                    </form>
-                </div>
+                @if (Auth::user()?->admin)
+                    <div class ="books_btn d-flex">
+                        <form class ="read_btn " action="{{route('redact', [$book->slug])}}">
+                            <button type="submit" class="book_about_third"> <i class=""></i>Изменить</button>
+                        </form>
+
+                        <form method="POST" class ="read_btn " action="{{route('delete', [$book->id])}}">
+                            @csrf
+                            <button type="submit" class="book_about_third"> <i class=""></i>Удалить</button>
+                        </form>
+
+                        <form method="GET" class ="read_btn " action="{{route('files', [$book->slug])}}">
+                            @csrf
+                            <button type="submit" class="book_about_third"> <i class=""></i>Управление файлами</button>
+                        </form>
+                    </div>
+                @endif
+
 
                 <div class ="films_logo d-flex">
                     <h5 class ="films_share">Поделиться:</h5>

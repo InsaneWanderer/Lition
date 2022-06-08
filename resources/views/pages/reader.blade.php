@@ -1,60 +1,59 @@
 @extends('layouts.main-layout')
 
-@section('title', {{ $title }})
+@section('title', $title)
 
 @section('content')
 
 <div style="margin: 2%;">
-
-@php
-    $s = 1;
-@endphp
 
     <section class ="container">
         <P>
 
         @foreach ($content as $line)
 
-            {{ $line }}
+            <br>{{ iconv("windows-1251","utf-8", $line) }}
 
         @endforeach
 
+        @if ($fragment)
+            <p><br><br>Читайте дальше по подписке</p>
+        @endif
         </P>
-        <div class = buttons_transit>
-            <div class ="prev_btn">
-            <a href="#" class="previous ">Предыдущая</a>
-        </div>
-        <div class ="button_padding">
-            <a href="" class="border-btn active ">1</a>
-        </div>
-        <div class ="button_padding">
-            <a href="book_secondт.html" class="border-btn ">2</a>
-        </div>
-        <div class ="button_padding">
-            <a href="" class="border-btn ">3</a>
-        </div>
-        <div class ="button_padding">
-            <a href="" class="border-btn ">4</a>
-        </div>
-        <div class ="button_padding">
-            <a href="" class="border-btn ">5</a>
-        </div>
-        <div class ="button_padding">
-            <a href="" class="border-btn ">6</a>
-        </div>
-            <div class ="button_padding">
-                <a href="" class="border-btn ">7</a>
+
+        @if (!$fragment)
+            <div class = buttons_transit>
+                @if ($cur_page != 1)
+                        <div class ="prev_btn">
+                        <a href="{{ route('read', [$slug, $cur_page - 1, 'русский']) }}" class="previous ">Предыдущая</a>
                     </div>
-            <div class ="button_padding">
-                <p class ="points">...</p>
-                </div>
-                <div class ="button_padding">
-                    <a href="" class="border-btn ">33</a>
+                @endif
+
+                @for ($i = $start; $i < $end + 1 && $i <= $page_count; $i++)
+                    <div class ="button_padding">
+                        <a href="{{ route('read', [$slug, $i, 'русский']) }}" class="border-btn  {{ $i == $cur_page ? 'active' : '' }}">{{ $i }}</a>
                     </div>
+                @endfor
+
+                @if (!($page_count - 7 < $cur_page) )
+                    <div class ="button_padding">
+                        <p class ="points">...</p>
+                    </div>
+
+                @endif
+                    @if ($cur_page != $page_count)
+                        <div class ="button_padding">
+                            <a href="{{ route('read', [$slug, $page_count, 'русский']) }}" class="border-btn ">{{ $page_count }}</a>
+                        </div>
+                    @endif
+
+                @if ($cur_page != $page_count)
                     <div class ="next_btn">
-                        <a href="book_secondт.html" class="previous " > Следующая</a>
+                        <a href="{{ route('read', [$slug, $cur_page + 1, 'русский']) }}" class="previous " > Следующая</a>
                     </div>
-                </div>
+                @endif
+
+            </div>
+        @endif
 
     </section>
 

@@ -2,15 +2,18 @@
 
 namespace App\Services;
 
+use App\Models\Book;
+use App\Models\File;
+use App\Models\Genre;
 use App\Repositories\BookRepository;
 use App\Repositories\CollectionRepository;
+use App\Repositories\GenreRepository;
 use App\Repositories\SubscriptionRepository;
 
 class IndexService extends BaseService
 {
     private BookRepository $bookRepostitory;
     private SubscriptionRepository $subRepository;
-    private CollectionRepository $collectionRepository;
 
     public function __construct() {
         $this->bookRepostitory = new BookRepository();
@@ -27,23 +30,49 @@ class IndexService extends BaseService
         return $data;
     }
 
-    public function find(string $find)
+    public function find(string $find = null)
     {
-        $arrFind = explode(' ', $find);
-        $booksByAuthor = [];
-        if (count($arrFind) == 2) {
-            $booksByAuthor = $this->bookRepostitory->findByAuthor($arrFind[0], $arrFind[1]);
+        $genres = Genre::all();
+        $languages = array();
+        $resultString = "";
+        if (isset($find)) {
+            $books = $this->bookRepostitory->findByName($find);
+
+            foreach ($books as $book) {
+                foreach ($book->files as $file) {
+                    if ($file->file_type != 'аудио') {
+                        array_push($languages, $file->file_type);
+                    }
+                }
+            }
+            $resultString = 'Результаты поиска для "'.$find.'"';
         }
         else {
-            $booksByAuthor = $this->bookRepostitory->findByAuthorParam($find);
+            $resultString = "Все варианты";
+            $books = Book::all();
+            $files = File::all();
+            foreach ($files as $file) {
+                if ($file->file_type != 'аудио') {
+                    array_push($languages, $file->file_type);
+                }
+            }
         }
 
         $data = [
-            'books' => $this->bookRepostitory->findByName($find),
-            'booksByAuthor' => $booksByAuthor,
-            'collections' => $this->collectionRepository->findByName($find),
+            'result_string' => $resultString,
+            'books' => $books,
+            'genres' => $genres,
+            'languages' => array_unique($languages),
         ];
 
         return $data;
     }
+
+    // public function filter(array $data)
+    // {
+    //     $result = [];
+    //     if (isset('books')) {
+    //         $result['books'] = $this->$
+    //     }
+    // }
 }

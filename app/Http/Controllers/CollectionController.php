@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Collection;
+use App\Models\Genre;
 use App\Services\CollectionService;
 use Illuminate\Http\Request;
 
@@ -15,12 +17,30 @@ class CollectionController extends Controller
 
     public function index()
     {
-        return $this->service->index();
+        $genres = Genre::all();
+        $collections = Collection::all();
+
+        return view('pages.catalog', [
+            'genres' => $genres,
+            'collections' => $collections,
+        ]);
     }
 
-    public function create()
+    public function goCreate(string $slug = null)
     {
-        return $this->service->create([]);
+        if ($slug != null) {
+            return view('pages.admin.create-collection', $this->service->prepareRedact($slug));
+        }
+        return view('pages.admin.create-collection', ['collection' => null]);
+    }
+
+    public function create(Request $request)
+    {
+        $data = $request->validate([
+            'name' => 'required|string|max:100',
+            'cover' => 'file',
+        ]);
+        return $this->service->create($data);
     }
 
     public function info(string $slug)
@@ -36,5 +56,15 @@ class CollectionController extends Controller
     public function removeBook()
     {
         return $this->service->removeBook([]);
+    }
+
+    public function delete()
+    {
+
+    }
+
+    public function update()
+    {
+        return 1;
     }
 }

@@ -78,4 +78,14 @@ class CollectionService extends BaseService
 
         return true;
     }
+
+    public function prepareRedact(string $slug)
+    {
+        $collection = $this->repo->findBySlug($slug);
+        if (!$collection) {
+            return $this->errNotFound('Подборка не найдена');
+        }
+
+        return ['collection', $collection];
+    }
 }

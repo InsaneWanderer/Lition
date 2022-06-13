@@ -4,8 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\CreateBookRequest;
 use App\Http\Requests\UpdateBookRequest;
-use App\Rules\AuthorRule;
-use App\Rules\GenreRule;
 use App\Services\BookService;
 use Illuminate\Http\Request;
 

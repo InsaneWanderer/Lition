@@ -32,7 +32,7 @@ class CreateBookRequest extends FormRequest
             'authors' => ['required', new AuthorRule()],
             'year' => ['required', 'numeric', 'min:1000', 'max:9999'],
             'genres' => ['required', new GenreRule()],
-            'description' => ['required', 'string', 'nullable'],
+            'description' => ['string', 'nullable'],
             'subscription_id' => ['required', 'exists:subscriptions,id'],
             'text_file' => ['required', 'file'],
         ];

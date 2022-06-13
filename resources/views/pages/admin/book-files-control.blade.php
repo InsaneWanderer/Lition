@@ -6,6 +6,9 @@
 <form id="upload-form" action="{{ route('editFiles', ['slug' => $book->slug]) }}" method="POST" enctype="multipart/form-data">
     @csrf
     <section class ="book container">
+        <div>
+
+        </div>
         <div id="just-test">
             <div id="file-block">
                 <div>

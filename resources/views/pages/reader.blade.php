@@ -7,7 +7,7 @@
 <div style="margin: 2%;">
 
     <section class ="container">
-        <P>
+        <P id="text-place">
 
         @foreach ($content as $line)
 
@@ -58,5 +58,59 @@
     </section>
 
 </div>
+
+
+
+<script>
+    function getSelection() {
+        var selection = (!!document.getSelection) ? document.getSelection() :
+           (!!window.getSelection)   ? window.getSelection() :
+           document.selection.createRange().text;
+        return selection.toString();
+
+    }
+
+    function x() {
+            loc=location.href;
+            lang='ru';
+            flag=true;
+            text = '';
+            if (window.getSelection) {
+                text= window.getSelection();
+            }
+            else if (document.getSelection) {
+                text = document.getSelection();
+            }
+            else if (document.selection) {
+                text = document.selection.createRange().text;
+            }
+        }
+
+    function y() {
+        if (text == '') {
+            location='http://translate.google.ru/translate?u='+encodeURIComponent(loc)+'&sl=auto&tl='+lang;
+        }
+    }
+
+    function z() {
+        if ((text!='')) {
+            var res=window.open('http://translate.google.ru/translate_t?text='+text+'&sl=auto&tl='+ lang ,'gTranslate_popup','left='+((window.screenX||window.screenLeft)+10)+',top='+((window.screenY||window.screenTop)+10)+',height=500px,width=950px,resizable=1,scrollbars=1');
+            window.setTimeout( function() {
+                res.focus();
+                },300);
+        }
+    }
+
+    $(document).ready(function() {
+        $('#text-place').mouseup(function() {
+            var selection = getSelection();
+            if (selection != "") {
+                x(); y(); z();
+            }
+        });
+    });
+</script>
+
+
 
 @endsection

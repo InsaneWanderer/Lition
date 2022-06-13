@@ -18,8 +18,23 @@ class IndexController extends Controller
         return view('pages.index', $this->service->index());
     }
 
-    public function search(string $find)
+    public function search(Request $request)
     {
-        return $this->service->find($find);
+        $data = $request->validate(['find' => ['string', 'nullable']]);
+        if (!isset($data)) {
+            $data['find'] = null;
+        }
+        return view('pages.search', $this->service->find($data['find']));
     }
+
+    // public function filter(Request $request)
+    // {
+    //     $data = $request->validate([
+    //         'genre' => 'string',
+    //         'language' => 'string',
+    //         'type' => 'string',
+    //     ]);
+
+    //     return $this->service->filter($data);
+    // }
 }

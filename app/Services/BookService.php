@@ -23,6 +23,35 @@ class BookService extends BaseService
         $this->genreRepository = new GenreRepository();
     }
 
+    private function authorsString($book)
+    {
+        $authors = "";
+        foreach ($book->authors as $author) {
+            $authors .= $author->name.' '.$author->surname.', ';
+        }
+        return substr($authors, 0, -2);
+    }
+
+    public static function languages($book)
+    {
+        $languages = "";
+        foreach ($book->files as $file) {
+            if ($file->file_type != 'аудио') {
+                $languages .= $file->file_type.', ';
+            }
+        }
+        return substr($languages, 0, -2);
+    }
+
+    public static function genresString($book)
+    {
+        $genres = "";
+        foreach ($book->genres as $genre) {
+            $genres .= $genre->name.', ';
+        }
+        return substr($genres, 0, -2);
+    }
+
     public function info(string $slug)
     {
         $book = $this->repository->bookBySlug($slug);
@@ -35,9 +64,25 @@ class BookService extends BaseService
             $authorsIds[] = $author->id;
         }
         $authorBooks = $this->repository->authorsOtherBooks($book->id, $authorsIds);
+
+        $audio = $this->repository->getAudio($book);
+
+        $audioarr = array();
+        foreach ($audio as $file)
+        {
+            $audioData = [
+                'name' => $book->name,
+                'artist' => $this->authorsString($book),
+                'album' => 'bum bum',
+                'url' => url($file->path),
+                'cover_art_url' => url($book->cover_path),
+            ];
+            array_push($audioarr, $audioData);
+        }
         $data = [
             'authors_books' => $authorBooks,
             'book' => $book,
+            'audio' => $audioarr,
         ];
         return $data;
     }
@@ -45,23 +90,17 @@ class BookService extends BaseService
     public function prepareRedact(string $slug = null)
     {
         $book = null;
+        $authors = null;
+        $genres = null;
         $subRepo = new SubscriptionRepository();
-        $authors = "";
-        $genres = "";
         if ($slug != null) {
             $book = $this->repository->bookBySlug($slug);
             if (!$book) {
                 return $this->errNotFound('Книга не найдена');
             }
 
-            foreach ($book->authors as $author) {
-                $authors .= $author->name.' '.$author->surname.', ';
-            }
-            $authors = substr($authors, 0, -2);
-            foreach ($book->genres as $genre) {
-                $genres .= $genre->name.', ';
-            }
-            $genres = substr($genres, 0, -2);
+            $authors = $this->authorsString($book);
+            $genres = $this->genresString($book);
         }
         $data = [
             'book' => $book,
@@ -81,7 +120,7 @@ class BookService extends BaseService
             return $this->errFobidden('В доступе отказано');
         }
 
-        $data['slug'] = $data['name'].date('-Y-m-d-h-i-sa');
+        $data['slug'] = str_replace(' ', '-', $data['name']).date('-Y-m-d-h-i-sa');
         if(isset($data['cover'])) {
             $path = $data['cover']->store('public/book/'.$data['slug'].'/cover');
             $data['cover_path'] = Storage::url($path);
@@ -136,7 +175,7 @@ class BookService extends BaseService
         }
 
         if ($data['name'] != $book->name) {
-            $data['slug'] = $data['name'].date('-Y-m-d-h-i-sa');
+            $data['slug'] = str_replace(' ', '-', $data['name']).date('-Y-m-d-h-i-sa');
         }
 
         if(isset($data['cover'])) {
@@ -284,7 +323,7 @@ class BookService extends BaseService
             ->first();
 
             if ($file) {
-                return $this->errNotAcceptable('Файл с таким типом уже существует');
+                return $this->errService('Файл с таким типом уже существует');
             }
 
             $path = "";
@@ -305,7 +344,7 @@ class BookService extends BaseService
         return true;
     }
 
-    public function removeFile(int $fileId)
+    public function removeFiles(int $fileId)
     {
         $file = File::find($fileId);
         if (!$file) {

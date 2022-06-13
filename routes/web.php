@@ -26,7 +26,9 @@ Route::post('/send-mail', [MailController::class, 'sendMail'])->name('sendMail')
 
 Route::group(['prefix' => '/collections'], function () {
     Route::get('', [CollectionController::class, 'index'])->name('collections');
+    Route::get('/create/{slug?}', [CollectionController::class, 'goCreate'])->name('goCreateCollection');
     Route::post('/create', [CollectionController::class, 'create'])->name('createCollection');
+    Route::post('/update', [CollectionController::class, 'update'])->name('updateCollection');
     Route::get('/{slug}', [CollectionController::class, 'info'])->name('getBooks');
     Route::post('/{slug}/add-books', [CollectionController::class, 'addBooks'])->name('addBook');
     Route::post('/{slug}/remove-books', [CollectionController::class, 'removeBooks'])->name('removeBook');
@@ -52,4 +54,4 @@ Route::group(['prefix' => '/admin'], function () {
     Route::get('/logs')->name('logs');
 });
 
-Route::get('/search/{find}', [IndexController::class, 'search'])->name('search');
+Route::get('/search', [IndexController::class, 'search'])->name('search');

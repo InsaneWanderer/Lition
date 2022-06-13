@@ -10,7 +10,17 @@
         integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6" crossorigin="anonymous">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.3/css/all.css"
         integrity="sha384-SZXxX4whJ79/gErwcOYf+zWLeJdY/qpuqC4cAa9rOGUstPomtqpuNWT9wdPEn2fk" crossorigin="anonymous">
-    <link rel="stylesheet" href="/css/style.css">
+
+        <link href="https://fonts.googleapis.com/css?family=Lato:400,400i" rel="stylesheet">
+
+		<!-- Include Amplitude JS -->
+		<script type="text/javascript" src="/../dist/amplitude.js"></script>
+
+		<!-- Include Style Sheet -->
+		<link rel="stylesheet"  href="/css/style.css"/>
+        <script type="text/javascript" src="/amplitudejs-5.3.2/dist/amplitude.js"></script>
+        <!-- Подключаем jQuery -->
+        <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
 
 </head>
 
@@ -53,7 +63,7 @@
                                 <li><a class ="{{ str_contains(request()->url(), '/catalog') ? 'color' : '' }}" href="" href="catalog.html">Каталог</a></li>
                                 @if (Auth::guard('web-user')->user()?->admin)
                                     <li> <a class ="{{ str_contains(request()->url(), '/redact') ? 'color' : '' }}" href="{{ route('redact') }}">Добавить книгу</a></li>
-                                    <li> <a class ="nav-link" href="{{ route('add') }}">Тест</a></li>
+                                    <li> <a class ="nav-link" href="{{ route('goCreateCollection') }}">Добавить подборку</a></li>
                                 @endif
                             </ul>
                         </li>
@@ -91,10 +101,10 @@
 
                     <a class ="header_profile d-flex" >
                         <div class="wraper ">
-                            {{-- TODO {{ route('find') }} --}}
-                            <form action="" method="POST">
+                            {{-- TODO  --}}
+                            <form action="{{ route('search') }}" method="GET">
                                 @csrf
-                                <input name="findstr" id="find" type="text" class="input " autocomplete="off" placeholder="Поиск">
+                                <input name="find" id="find" name="find" type="text" class="input " autocomplete="off" placeholder="Поиск">
                             </form>
                             <i class="fa fa-search" aria-hidden="false"></i>
                         </div>
@@ -160,12 +170,12 @@
                     <a class ="{{ str_contains(request()->url(), '/all') ? 'nav-link color' : 'nav-link' }}" href="">Новинки</a>
                     <!-- <a class ="nav-link" href="novelties.html">Аудиокниги</a>
                     <a class ="nav-link" href="novelties.html">Другие языки</a> -->
-                    <a class ="{{ str_contains(request()->url(), '/catalog') ? 'nav-link color' : 'nav-link' }}" href="">Каталог</a>
+                    <a class ="{{ str_contains(request()->url(), '/catalog') ? 'nav-link color' : 'nav-link' }}" href="{{ route('collections') }}">Каталог</a>
                     <a class ="nav-link" href="">Подборки</a>
                     <a class ="{{ str_contains(request()->url(), '/subscriptions') ? 'nav-link color' : 'nav-link' }}" href="{{route('subs')}}">Подписки</a>
                     @if (Auth::guard('web-user')->user()?->admin)
                         <a class ="{{ str_contains(request()->url(), '/redact') ? 'nav-link color' : 'nav-link' }}" href="{{ route('redact') }}">Добавить книгу</a>
-                        <a class ="nav-link" href="{{ route('add') }}">Тест</a>
+                        <a class ="{{ str_contains(request()->url(), '/collections/create') ? 'nav-link color' : 'nav-link' }}" href="{{ route('goCreateCollection') }}">Добавить подборку</a>
                     @endif
                 </nav>
             </div>
@@ -250,6 +260,8 @@
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
     <!-- Подключаем слайдер Slick -->
     <script src="/js/slick.min.js"></script>
+    <!-- Подключаем файл скриптов -->
+    <script src="js/book.js"></script>
     <!-- Подключаем файл скриптов -->
     <script src="/js/main.js"></script>
     <script src="/js/index.js"></script>

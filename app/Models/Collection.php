@@ -9,6 +9,12 @@ class Collection extends Model
 {
     use HasFactory;
 
+    protected $fillable =[
+        'slug',
+        'name',
+        'cover_path'
+    ];
+
     public function books()
     {
         return $this->belongsToMany(Book::class, 'collection_books');
